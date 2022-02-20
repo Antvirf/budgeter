@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:*",
+                "s3:Get*",
+                "s3:List*",
+                "s3-object-lambda:Get*",
+                "s3-object-lambda:List*",
+                "ses:SendEmail",
+                "ses:SendRawEmail",
+                "sqs:*"
+            ],
+            "Effect": "Allow",
+            "Resource" : "*"
+        }
+    ]
+}
