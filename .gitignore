@@ -1,6 +1,9 @@
 categories.json
 ./outputs/*.zip
 
+**/.__pycache__/*
+
+
 # Local .terraform directories
 **/.terraform/*
 
