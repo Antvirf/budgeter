@@ -1,0 +1,25 @@
+
+TODO
+- Set up output DB
+- Push output to DB
+- Set up separately triggered Lambda to recompute old file if categories are given  
+
+- Optimal resolution process
+    Send email with link
+    Link spins up a VM
+    VM runs a web UI to input choices
+        Choose choices
+        Click apply
+    Sends choices to categories.json
+    Triggers reprocessing of THE AFFECTED budget.txt files
+
+
+
+Server-based approach
+- have a running EC2 micro instance with a UI Server
+    Ability to VIEW past record
+    Ability to GENERATE new record - copy paste text file
+        Go through process - ask when things go wrong and solve them on the spot
+        
+
+

@@ -59,11 +59,14 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 # Uploading 'categories.json' to s3 bucket to set up the app
-resource "aws_s3_object" "file_upload" {
+resource "aws_s3_bucket_object" "file_upload" {
   bucket = "budgeterstorage"
   key    = "categories.json"
   source = "categories.json"
   etag   = filemd5("categories.json")
+  depends_on = [
+    aws_s3_bucket.bucket
+  ]
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {

@@ -103,10 +103,10 @@ def summary_process(list_of_processed_spend_items):
         output_string += "Non-categorized items: " + ", ".join([x.description for x in list_of_no_cat_items])
     return output_string
 
-def send_queue_error(body):
+def send_queue_error(body, url):
     client = boto3.client('sqs')
     client.send_message(
-    QueueUrl='https://sqs.ap-southeast-1.amazonaws.com/750704564056/terraform-example-queue.fifo',
+    QueueUrl=url,
     MessageBody=body,
     DelaySeconds=0,
     MessageGroupId="budgeterErrorQueue"
@@ -138,6 +138,12 @@ def send_email(text_body):
     Source=sender_address,
     )
 
+def read_queue_url(filename = "queue_url.txt"):
+    with open(filename, 'r') as fp:
+        url = fp.readlines()[0].strip()
+    return url
+
+
 def run_on_lambda(event, context):
     # retrieve bucket name and file_key from the S3 event
     bucket_name = event['Records'][0]['s3']['bucket']['name']
@@ -147,6 +153,9 @@ def run_on_lambda(event, context):
     # read categories
     cat = s3.get_object(Bucket=bucket_name, Key="categories.json")
     categories = json.loads(cat['Body'].read())
+
+    # read queue url
+    queue_url = read_queue_url()
 
     # read budget file
     obj = s3.get_object(Bucket=bucket_name, Key=file_key)
@@ -163,7 +172,7 @@ def run_on_lambda(event, context):
     for line_item in processed_line_items:
         if not line_item.category:
             logging.info("MISSING CAT: "+str(line_item))
-            send_queue_error(line_item.get_json())
+            send_queue_error(line_item.get_json(), queue_url)
 
     # Create summary
     out = summary_process(processed_line_items)
