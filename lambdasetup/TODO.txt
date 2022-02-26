@@ -1,8 +1,14 @@
+DONE
+- Email alert on non-categorized items
+- Smarter queue implementation - no need to send file, just use getqueubyname
 
 TODO
+
 - Set up output DB
 - Push output to DB
 - Set up separately triggered Lambda to recompute old file if categories are given  
+
+
 
 - Optimal resolution process
     Send email with link

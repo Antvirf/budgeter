@@ -103,13 +103,14 @@ def summary_process(list_of_processed_spend_items):
         output_string += "Non-categorized items: " + ", ".join([x.description for x in list_of_no_cat_items])
     return output_string
 
-def send_queue_error(body, url):
-    client = boto3.client('sqs')
-    client.send_message(
-    QueueUrl=url,
-    MessageBody=body,
-    DelaySeconds=0,
-    MessageGroupId="budgeterErrorQueue"
+def send_queue_error(body):
+    #client = boto3.client('sqs')
+    sqs = boto3.resource('sqs')
+    q = sqs.get_queue_by_name(QueueName='errorqueue.fifo')
+    q.send_message(
+        MessageBody=body,
+        DelaySeconds=0,
+        MessageGroupId="budgeterErrorQueue"
     )
 
 def send_email(text_body):
@@ -155,7 +156,7 @@ def run_on_lambda(event, context):
     categories = json.loads(cat['Body'].read())
 
     # read queue url
-    queue_url = read_queue_url()
+    # queue_url = read_queue_url()
 
     # read budget file
     obj = s3.get_object(Bucket=bucket_name, Key=file_key)
@@ -169,13 +170,16 @@ def run_on_lambda(event, context):
         )
     
     # Print out what we don't have a category for - to be processed. 
+    email_body = """Entries without category:\n"""
     for line_item in processed_line_items:
         if not line_item.category:
+            email_body += "\t" + str(line_item) + "\n"
             logging.info("MISSING CAT: "+str(line_item))
-            send_queue_error(line_item.get_json(), queue_url)
-
+            send_queue_error(line_item.get_json())
+    
     # Create summary
     out = summary_process(processed_line_items)
     
-    #send_email(out)
+    email_body += "\n\n" + out
+    send_email(email_body)
     logging.info(out)

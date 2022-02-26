@@ -10,13 +10,13 @@ resource "aws_sqs_queue" "terraform_queue" {
 }
 
 # Create url file
-resource "local_file" "queue_url_file" {
-    content     = "${aws_sqs_queue.terraform_queue.url}"
-    filename = "${path.module}/lambdasetup/queue_url.txt"
-    depends_on = [
-      aws_sqs_queue.terraform_queue
-    ]
-}
+# resource "local_file" "queue_url_file" {
+#     content     = "${aws_sqs_queue.terraform_queue.url}"
+#     filename = "${path.module}/lambdasetup/queue_url.txt"
+#     depends_on = [
+#       aws_sqs_queue.terraform_queue
+#     ]
+# }
 
 # Create the zip file to upload to Lambda
 data "archive_file" "budgeter" {
@@ -26,7 +26,7 @@ data "archive_file" "budgeter" {
   output_path = local.lambda_zip_location
   depends_on = [
     aws_sqs_queue.terraform_queue,
-    local_file.queue_url_file,
+    #local_file.queue_url_file,
   ]
 }
 
@@ -48,6 +48,17 @@ resource "aws_lambda_function" "budgetfunc" {
   source_code_hash = filebase64sha256(local.lambda_zip_location)
   runtime          = "python3.8"
 }
+
+# Create lambda function to send email
+# resource "aws_lambda_function" "emailfunc" {
+#   filename         = local.lambda_zip_location
+#   function_name    = "send_lambda_email"
+#   role             = aws_iam_role.lambda_role.arn
+#   handler          = "send_email.send_email"
+#   source_code_hash = filebase64sha256(local.lambda_zip_location)
+#   runtime          = "python3.8"
+# }
+
 
 # Create the bucket
 resource "aws_s3_bucket" "bucket" {
