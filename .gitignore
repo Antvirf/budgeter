@@ -5,7 +5,6 @@ categories.json
 **/.__pycache__/*
 
 # Terraform lock file
-terraform.lock.hcl
 
 # Local .terraform directories
 **/.terraform/*
@@ -13,6 +12,7 @@ terraform.lock.hcl
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*terraform.lock.hcl*
 
 # Crash log files
 crash.log
