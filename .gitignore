@@ -3,6 +3,7 @@ categories.json
 
 **/.__pycache__/*
 
+*.lock.hcl
 
 # Local .terraform directories
 **/.terraform/*
