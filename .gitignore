@@ -1,9 +1,11 @@
 categories.json
 ./outputs/*.zip
+.DS_Store
 
 **/.__pycache__/*
 
-*.lock.hcl
+# Terraform lock file
+terraform.lock.hcl
 
 # Local .terraform directories
 **/.terraform/*
