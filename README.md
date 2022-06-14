@@ -4,7 +4,7 @@
 ### Background
 For several years now I have tracked every expense/spend, and I initially developed a simple script to categorize spending items on a weekly basis to different categories. These categories are created and updated with the script, so every time the aggregation is done and there is an item without a category, the user is asked to specify a category. In the future, items with that same name would go to that previously assigned category automatically.
 
-This allows me to create an understandable, weekly aggregation of my spending very easily
+This allows me to create an understandable, weekly aggregation of my spending very easily.
 
 ### What this repository contains
 I started working on a (semi) cloud-based version in order to understand IaaS and serverless architecture better, and this repository stores the results of that effort. I have yet to define how the initial upload process will work, but as of current the code in the repo handles the following steps:
